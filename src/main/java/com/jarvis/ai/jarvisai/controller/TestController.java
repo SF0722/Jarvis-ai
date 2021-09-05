@@ -1,5 +1,6 @@
 package com.jarvis.ai.jarvisai.controller;
 
+import com.jarvis.ai.jarvisai.model.Dialogue;
 import com.jarvis.ai.jarvisai.model.User;
 import com.jarvis.ai.jarvisai.service.SayHelloService;
 import com.jarvis.ai.jarvisai.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -26,8 +28,10 @@ public class TestController {
 
 
     @RequestMapping(value = "/say_hello_to_somebody")
-    public String sayhello(@RequestParam(value = "userId")Long userId,@RequestParam(value = "content") String content){
-        return sayHelloService.sayhello(userId,content);
+    public Dialogue sayhello(@RequestParam(value = "userId")Long userId, @RequestParam(value = "content") String content){
+        String str = sayHelloService.sayhello(userId,content);
+        return new Dialogue(0,str,new Date().toString());
+
     }
 
 
