@@ -29,7 +29,8 @@ public class TestController {
 
     @RequestMapping(value = "/say_hello_to_somebody")
     public Dialogue sayhello(@RequestParam(value = "userId")Long userId, @RequestParam(value = "content") String content){
-        String str = sayHelloService.sayhello(userId,content);
+//        String str = sayHelloService.sayhello(userId,content);
+        String str ="hello";
         return new Dialogue(0,str,new Date().toString());
 
     }
