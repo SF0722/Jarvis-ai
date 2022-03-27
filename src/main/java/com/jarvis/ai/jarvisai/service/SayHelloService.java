@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.jarvis.ai.jarvisai.model.QuestionAndAnswer;
 import com.jarvis.ai.jarvisai.model.Result;
 import com.jarvis.ai.jarvisai.utils.HttpClientUtil;
+
+import org.neo4j.driver.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -67,8 +69,24 @@ public class SayHelloService {
 
         }
         return answerContent;
-
-
-
     }
+
+    public String queryNeo4j(){
+        Driver driver = GraphDatabase.driver( "bolt://localhost:7687", AuthTokens.basic("neo4j", "Ljl1388627"));
+        Session session = driver.session();
+        String resultstr="";
+        // 查询
+        org.neo4j.driver.Result result = session.beginTransaction().run("MATCH (n:Disease) RETURN n.disease_name as disease_name,n.symptom as symptom limit 1");
+        while (result.hasNext()) {
+            Record record = result.next();
+            String name = record.get("disease_name").asString();
+            String symptom = record.get("symptom").asString();
+            System.out.println(name + "\t" + symptom);
+            resultstr=name + "\t" + symptom;
+        }
+        session.close();
+        driver.close();
+        return resultstr;
+    }
+
 }

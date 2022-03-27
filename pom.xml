@@ -89,6 +89,22 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.0.2</version>
 		</dependency>
+		<!-- neo4j 相关的API -->
+		<dependency>
+			<groupId>org.neo4j.driver</groupId>
+			<artifactId>neo4j-java-driver</artifactId>
+			<version>4.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j</artifactId>
+			<version>3.3.4</version>
+		</dependency>
+		<!-- neo4j -->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-data-neo4j</artifactId>-->
+<!--		</dependency>-->
 
 
 	</dependencies>
