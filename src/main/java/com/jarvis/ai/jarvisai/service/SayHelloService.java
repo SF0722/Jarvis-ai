@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -71,19 +72,32 @@ public class SayHelloService {
         return answerContent;
     }
 
-    public String queryNeo4j(){
+
+
+    public String getResultBykey(String[] keys,org.neo4j.driver.Result result){
+        StringBuffer sb=new StringBuffer();
+        while (result.hasNext()) {
+            Record record = result.next();
+            System.out.println(record.toString());
+            sb.append("[");
+            for (String key:keys) {
+                sb.append(record.get(key)+" ");
+            }
+            sb.append("]");
+            sb.append(",");
+        }
+        return sb.toString();
+    }
+
+    public String queryNeo4j(String[] keys,String cypherStr){
         Driver driver = GraphDatabase.driver( "bolt://localhost:7687", AuthTokens.basic("neo4j", "Ljl1388627"));
         Session session = driver.session();
         String resultstr="";
+        ArrayList<Record> records=new ArrayList<>();
         // 查询
-        org.neo4j.driver.Result result = session.beginTransaction().run("MATCH (n:Disease) RETURN n.disease_name as disease_name,n.symptom as symptom limit 1");
-        while (result.hasNext()) {
-            Record record = result.next();
-            String name = record.get("disease_name").asString();
-            String symptom = record.get("symptom").asString();
-            System.out.println(name + "\t" + symptom);
-            resultstr=name + "\t" + symptom;
-        }
+        System.out.println("执行cypher语句"+cypherStr);
+        org.neo4j.driver.Result result = session.beginTransaction().run(cypherStr);
+        resultstr=getResultBykey(keys,result);
         session.close();
         driver.close();
         return resultstr;
