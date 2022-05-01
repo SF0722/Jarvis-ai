@@ -41,16 +41,16 @@ public class TestController {
     }
 
     @RequestMapping("/cookie")
-    public String cookie(@RequestParam("browser") String browser, HttpServletRequest request, HttpSession session) {
-        //取出session中的browser
-//        Object sessionBrowser = session.getAttribute("browser");
+    public Dialogue cookie(@RequestParam("content") String message, HttpServletRequest request, HttpSession session) {
+        //取出session中的message
+//        Object sessionMessage = session.getAttribute("message");
 
 
         String status=getStatus(getDiseaseSession(session));
 
 
 
-        System.out.println(browser);
+        System.out.println(message);
         System.out.println("更新前状态："+status);
 
         String login= (String) session.getAttribute("login");
@@ -64,8 +64,8 @@ public class TestController {
                     session.setAttribute("login","login");
                 }else{
                     Set<String> set=new HashSet<>(Arrays.asList("I","E","D"));
-                    if(set.contains(browser)) {
-                        session.setAttribute("firstCategory", browser);
+                    if(set.contains(message)) {
+                        session.setAttribute("firstCategory", message);
                     }else{
                         pre=tryAgain;
                     }
@@ -82,8 +82,8 @@ public class TestController {
                         set1.add(cc);
                     }
                 }
-                if(set1.contains(browser)) {
-                    session.setAttribute("secondaryCategory", browser);
+                if(set1.contains(message)) {
+                    session.setAttribute("secondaryCategory", message);
                 }else{
                     pre=tryAgain;
                 }
@@ -100,8 +100,8 @@ public class TestController {
                         set2.add(diseaseId);
                     }
                 }
-                if(set2.contains(browser)) {
-                    session.setAttribute("diseaseId", browser);
+                if(set2.contains(message)) {
+                    session.setAttribute("diseaseId", message);
                     if(getStatus(getDiseaseSession(session)).equals("111111110")){
                         session.setAttribute("result",getSuggestion(session));
                     }
@@ -111,7 +111,7 @@ public class TestController {
                 break;
             case "111000000":
                 try {
-                    int year = Integer.parseInt(browser.trim());
+                    int year = Integer.parseInt(message.trim());
                     if (year >= 1 && year <= 100) {
                         session.setAttribute("ageYear", year + "");
                         session.setAttribute("ageMonth", "0");
@@ -127,7 +127,7 @@ public class TestController {
                 break;
             case "111100000":
                 try{
-                    int month=Integer.parseInt(browser.trim());
+                    int month=Integer.parseInt(message.trim());
                     if(month>=1 && month<=11){
                         session.setAttribute("ageMonth",month+"");
                         session.setAttribute("ageWeek",month*4+"");
@@ -142,7 +142,7 @@ public class TestController {
                 break;
             case "111110000":
                 try{
-                    int week=Integer.parseInt(browser.trim());
+                    int week=Integer.parseInt(message.trim());
                     if(week>=0 && week<=3){
                         session.setAttribute("ageWeek",week+"");
                     }else{
@@ -153,7 +153,7 @@ public class TestController {
                 }
                 break;
             case "111111000":
-                String g=browser.trim();
+                String g=message.trim();
                 if(g.equals("1")){
                     session.setAttribute("gender",g);
                     session.setAttribute("isPregnancyBreastfeeding","0");
@@ -165,7 +165,7 @@ public class TestController {
                 }
                 break;
             case "111111100":
-                String p=browser.trim();
+                String p=message.trim();
                 if(p.equals("1") || p.equals("0")) {
                     session.setAttribute("isPregnancyBreastfeeding", p);
                     //111111110
@@ -179,7 +179,7 @@ public class TestController {
                 session.setAttribute("result",getSuggestion(session));
                 break;
             case "111111111":
-                int isSaveUser=Integer.parseInt(browser);
+                int isSaveUser=Integer.parseInt(message);
                 if(isSaveUser==1){
                     session.setAttribute("firstCategory",null);
                     session.setAttribute("secondaryCategory",null);
@@ -262,7 +262,8 @@ public class TestController {
 
 
         }
-        return pre+s;
+//        return pre+s;
+        return new Dialogue(0,pre+s,new Date().toString());
     }
 
     public DiseaseSession getDiseaseSession(HttpSession session){
