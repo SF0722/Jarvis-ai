@@ -90,7 +90,7 @@ public class SayHelloService {
     }
 
     public String queryNeo4j(String[] keys,String cypherStr){
-        Driver driver = GraphDatabase.driver( "bolt://localhost:7687", AuthTokens.basic("neo4j", "Ljl1388627"));
+        Driver driver = GraphDatabase.driver( "bolt://localhost:7687", AuthTokens.basic("neo4j", "Stephanie0722"));
         Session session = driver.session();
         String resultstr="";
         ArrayList<Record> records=new ArrayList<>();

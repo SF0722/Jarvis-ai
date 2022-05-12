@@ -51,12 +51,12 @@ public class TestController {
 
 
         System.out.println(message);
-        System.out.println("更新前状态："+status);
+        System.out.println("newStatus："+status);
 
         String login= (String) session.getAttribute("login");
         String s="";
         String pre="";
-        String tryAgain="输入不合法，请按照提示输入！";
+        String tryAgain="Illegal input, please follow the prompt!";
 
         switch (status){
             case "000000000":case "000111110":
@@ -205,59 +205,68 @@ public class TestController {
         DiseaseSession diseaseSession=getDiseaseSession(session);
         System.out.println(JSON.toJSONString(diseaseSession));
         status=getStatus(diseaseSession);
-        System.out.println("更新后状态："+status);
+        System.out.println("newStatus："+status);
         //文案
         switch (status){
             case "000000000":case "000111110":
                 if(login==null){
-                    pre="欢迎第一次来";
-                    s="请问您要咨询哪类病症（一级）："+sayHelloService.queryNeo4j(new String[]{"first_category","first_category_name"},
+                    pre="<br>Welcome to your personal healthcare assistant!<br/>";
+                    s="<br>Which category do you want to query?(First category)<br/>\n" +
+                            "<br>Please select the alphabet:<br/>\n" +
+                            "<br>I:Internal disease - a disease that is not visible on the surface of the body.<br/>\n" +
+                            "<br> E:External disease - a disease visible on the surface of the body.<br/>\n" +
+                            "<br>D:Dentistry - dental and oral related diseases<br/>\n："+sayHelloService.queryNeo4j(new String[]{"first_category","first_category_name"},
                             "MATCH (n:Category)  RETURN distinct n.first_category as first_category,n.first_category_name as first_category_name  order by n.first_category");
                 }else {
-                    s = "请问您要咨询哪类病症（一级）："+sayHelloService.queryNeo4j(new String[]{"first_category","first_category_name"},
+                    s = "<br>Which category do you want to query?(First category)<br/>\n" +
+                            "<br>Please select the alphabet:<br/>\n" +
+                            "<br>I:Internal disease - a disease that is not visible on the surface of the body.<br/>\n" +
+                            "<br> E:External disease - a disease visible on the surface of the body.<br/>\n" +
+                            "<br>D:Dentistry - dental and oral related diseases<br/>\n："+sayHelloService.queryNeo4j(new String[]{"first_category","first_category_name"},
                             "MATCH (n:Category)  RETURN distinct n.first_category as first_category,n.first_category_name as first_category_name  order by n.first_category");
                 }
                 break;
             case "100000000":case "100111110":
-                s="请问您要咨询哪类病症（二级）："+sayHelloService.queryNeo4j(new String[]{"secondary_category","secondary_category_name"},
+                s="<br>Which category do you want to query?(Secondary category)<br/>\n" +
+                        "<br>Please select the number:<br/>"+sayHelloService.queryNeo4j(new String[]{"secondary_category","secondary_category_name"},
                         String.format("MATCH (n:Category) where n.first_category='%s' RETURN distinct n.secondary_category as secondary_category,n.secondary_category_name as secondary_category_name  order by n.secondary_category",diseaseSession.getFirstCategory()));
                 break;
             case "110000000":case "110111110":
-                s="请选择详细疾病："+sayHelloService.queryNeo4j(new String[]{"disease_id","disease_name"},
+                s="<br>Please select the diseases number that you want to query :<br/>\n"+sayHelloService.queryNeo4j(new String[]{"disease_id","disease_name"},
                         String.format("MATCH (n:Disease)  where n.secondary_category=%s RETURN distinct n.disease_id as disease_id,n.disease_name as disease_name order by disease_id",diseaseSession.getSecondaryCategory()));
                 break;
             case "111000000":
-                s="岁数？(0-100)";
+                s="<br>Your age is?(0-100, age under 1 please input 0)<br/>";
                 break;
             case "111100000":
                 int year= Integer.parseInt(diseaseSession.getAgeYear()) ;
                 if(year>=1){
-                    s="性别？(1 男；0 女)";
+                    s="<br>What is your gender ?(1: male, 0: female)<br/>";
                 }else{
-                    s="月数？（0-11）";
+                    s="<br>What is your age in month is?(0-11,under 1 month please input 0)<br/>";
                 }
                 break;
             case "111110000":
                 int month=Integer.parseInt(diseaseSession.getAgeMonth()) ;
                 if(month>=1){
-                    s="性别？(1 男；0 女)";
+                    s="<br>What is your gender ?(1: male, 0: female)<br/>\n";
                 }else{
-                    s="周数？（0-3）";
+                    s="<br>What is your age in week is?(0-3)<br/>\n";
                 }
                 break;
             case "111111000":
-                s="性别？(1 男；0 女)";
+                s="<br>What is your gender ?(1: male, 0: female)<br/>\n";
                 break;
             case "111111100":
                 int g=Integer.parseInt(diseaseSession.getGender()) ;
                 if(g==1){
-                    s="返回结果:"+ diseaseSession.getResult()+"是否作为当前患者继续查询？（1 yes；0 no）";
+                    s="Return result:"+ diseaseSession.getResult()+"<br>Do you want to keep query as current patient or start as a new patient?(1: yes,0: no)<br/>\n";
                 }else{
-                    s="怀孕哺乳？（1 yes；0 no）";
+                    s="<br>Do you want to keep query as current patient or start as a new patient?(1: yes,0: no)<br/>\n";
                 }
                 break;
             case "111111110":case "111111111":
-                s="返回结果:\n"+diseaseSession.getResult()+"\n是否作为当前患者继续查询？（1 yes；0 no）";
+                s="\"Return result\n"+diseaseSession.getResult()+"\n<br>Do you want to keep query as current patient or start as a new patient?(1: yes,0: no)<br/>\n";
                 break;
 
 
