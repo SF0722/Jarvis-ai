@@ -262,7 +262,7 @@ public class TestController {
                 if(g==1){
                     s="Return result:"+ diseaseSession.getResult()+"<br>Do you want to keep query as current patient or start as a new patient?(1: yes,0: no)<br/>\n";
                 }else{
-                    s="<br>Do you want to keep query as current patient or start as a new patient?(1: yes,0: no)<br/>\n";
+                    s="<br>Are you in pregnant or breastfeeding?(1: male, 0: female)<br/>\n";
                 }
                 break;
             case "111111110":case "111111111":
